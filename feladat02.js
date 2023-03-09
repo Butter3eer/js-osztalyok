@@ -1,6 +1,4 @@
-// JS-ben is van lehetőség osztály definiálására, bár objektumokat enélkül is létre tudtunk eddig is hozni.
 class Pont {
-    // Privát adattagot #-el jelöljük.
     #x;
     #y;
     constructor (x, y) {
@@ -8,7 +6,6 @@ class Pont {
         this.#y = y;
     }
 
-    // get/set property létrehozása
     get x() {
         return this.#x;
     }
@@ -33,9 +30,9 @@ class Pont {
         }
     }
 
-    tavolsagAzOrigotol(p) {
-        var a = p.x;
-        var b = p.y;
+    tavolsagAzOrigotol() {
+        var a = this.#x;
+        var b = this.#y;
         var c = Math.sqrt((a * a) + (b * b));
         return c;
     }
@@ -57,8 +54,6 @@ class Pont {
         return c;
     }
 
-
-    // getter/setter fügvény használata
     getX() {
         return this.#x;
     }
@@ -86,7 +81,7 @@ class Pont {
     toString() {
         return `Pont{x = ${this.#x}, y = ${this.#y}}`;
     }
-}
+} 
 
 const pontok = [];
 
@@ -95,12 +90,15 @@ function hozzaAd() {
     const input_y = document.getElementById('input_y');
     const x = parseInt(input_x.value);
     const y = parseInt(input_y.value);
-    pontok.push(new Pont(x, y));
+    const pont = new Pont(x, y);
+    pontok.push(pont);
 
-    // konzolra táblázatos formában írja ki a lista tartalmát
-    console.table(pontok);
+    document.getElementById("origo").innerHTML = "A pont távolsága az origótól: " + pont.tavolsagAzOrigotol();
+    
 }
 
-for (var i = 0; i < pontok.length; i++){
-    document.getElementById("origo").innerHTML = "A pont távolsága az origótól: " + tavolsagAzOrigotol(pontok[i]);
+document.getElementById("hozzaad").addEventListener("click", kiir);
+
+function kiir() {
+    window.alert("Hello")
 }
