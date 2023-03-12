@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id="etel_urlap">
+        <div class="mb-3">
+            <label for="nev">Étel neve:</label>
+            <input type="text" id="nev">
+        </div>
+
+        <div class="mb-3">
+            <label for="ar">Étel ára:</label>
+            <input type="number" id="ar">
+        </div>
+
+        <div>
+            <label for="kategoria">Kategória:</label>
+            <select name="kategoria" id="kategoria">
+                <option value="Előétel">Előétel</option>
+                <option value="Főétel">Főétel</option>
+                <option value="Desszert">Desszert</option>
+            </select>
+        </div>
+            
+        <div>
+            <p>Összetevők:</p>
+            <input type="checkbox" id="liszt" value="liszt">
+            <label for="liszt">Liszt</label><br>
+            <input type="checkbox" id="tojás" value="tojás">
+            <label for="tojás">Tojás</label><br>
+            <input type="checkbox" id="vaj" value="vaj">
+            <label for="vaj">Vaj</label><br>
+            <input type="checkbox" id="cukor" value="cukor">
+            <label for="cukor">Cukor</label><br>
+            <input type="checkbox" id="víz" value="víz">
+            <label for="víz">Víz</label><br>
+        </div>
+
+        <button type="button" id="hozzaad">Hozzáad</button>
+
+        <div>
+            <table class="table" id="eloetelek">
+                <thead>
+                    <th>Előételek</th>
+                </thead>
+                <tbody id="eloetelekBody">
+                    <tr id="Erow"></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <table class="table" id="foetelek">
+                <thead>
+                    <th>Főételek</th>
+                </thead>
+                <tbody id="foetelekBody">
+                    <tr id="Frow"></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <table class="table" id="desszertek">
+                <thead>
+                    <th>Desszertek</th>
+                </thead>
+                <tbody id="desszertekBody">
+                    <tr id="Drow"></tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+
+    <script>
+        class Etel {
+            constructor (nev, ar){
+                this.nev = nev;
+                this.ar = ar;
+                this.kategoria = "";
+                this.osszetevok = [];
+            }
+
+            setKategoria (kateg) {
+                this.kategoria = kateg;
+                return this;
+            }
+
+            setOsszetevok (lista) {
+                this.osszetevok = lista;
+                return this;
+            }
+        }
+        const etelek = [];
+        const eloetelek = [];
+        const foetelek = [];
+        const desszertek = [];
+
+        
+
+        function hozzaAd() {
+            const nev = document.getElementById("nev").value;
+            const ar = parseInt(document.getElementById("ar").value);
+            etelek.push(new Etel(nev, ar))
+
+            const szelekt = document.getElementById('kategoria');
+            let kateg = szelekt.value;
+
+            const dobozok = document.querySelectorAll('input[type="checkbox"]');
+            let kijeloltek = [];
+        }
+
+        szelekt.addEventListener("change", (event) => {
+            kateg = event.target.value;
+        })
+
+        if (Etel.setKategoria(kategoria) == "Előétel"){
+            eloetelek.push(new Etel(nev, ar))
+        }
+        else if (Etel.setKategoria(kategoria) == "Főétel"){
+            foetelek.push(new Etel(nev, ar))
+        }
+        else if (Etel.setKategoria(kategoria) == "Desszert"){
+            desszertek.push(new Etel(nev, ar))
+        }
+
+        dobozok.forEach((item) => {
+            if (item.target.checked) {
+                kijeloltek.push(event.target.value);
+            }
+            else{
+                kijeloltek = kijeloltek.filter((value) => value !== event.target.value)
+            }
+        })
+
+        function addRow(nev, ar, osszetevok){
+            let Ebody = document.getElementById("eloetelekBody")
+            let Erow = document.getElementById("Erow");
+            Erow.innerHTML = `
+                <td>${nev}</td>
+                <td>${ar}</td>
+                <td>${osszetevok}</td>`;
+            
+                Ebody.appendChild(Erow);
+        }
+        
+    </script>
+</body>
+</html>

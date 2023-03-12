@@ -1,104 +1,67 @@
 class Pont {
-    #x;
-    #y;
     constructor (x, y) {
-        this.#x = x;
-        this.#y = y;
+        this.x = x;
+        this.y = y;
     }
 
-    get x() {
-        return this.#x;
-    }
-
-    set x(value) {
+    setX (value) {
         if (value < 0) {
-            alert("A program csak a jobbfelső síknegyedben lévő pontokat tudja kezelni")
-        } else {
-            this.#x = value;
+            window.alert("A program csak a jobbfelső síknegyedben lévő pontokat tudja kezelni.")
         }
+        else {
+            this.x = value;
+        }
+        return this;
     }
 
-    get y() {
-        return this.#y;
-    }
-
-    set y(value) {
+    setY (value) {
         if (value < 0) {
-            alert("A program csak a jobbfelső síknegyedben lévő pontokat tudja kezelni")
-        } else {
-            this.#y = value;
+            window.alert("A program csak a jobbfelső síknegyedben lévő pontokat tudja kezelni.")
         }
-    }
-
-    tavolsagAzOrigotol() {
-        var a = this.#x;
-        var b = this.#y;
-        var c = Math.sqrt((a * a) + (b * b));
-        return c;
-    }
-
-    static statikus_tavolsag(p1, p2) {
-        if (p1.y < p2.y) {
-            var b = p2.y - p1.y;
+        else {
+            this.y = value;
         }
-        else{
-            b = p1.y - p2.y;
-        }
-        if (p1.x < p2.x) {
-            var a = p2.x - p1.x;
-        }
-        else{
-            a = p1.x - p2.x;
-        }
-        var c = Math.sqrt((a * a) + (b * b));
-        return c;
-    }
-
-    getX() {
-        return this.#x;
-    }
-
-    setX(value) {
-        if (value < 0) {
-            alert("A program csak a jobbfelső síknegyedben lévő pontokat tudja kezelni")
-        } else {
-            this.#x = value;
-        }
-    }
-
-    getY() {
-        return this.#y;
-    }
-
-    setY(value) {
-        if (value < 0) {
-            alert("A program csak a jobbfelső síknegyedben lévő pontokat tudja kezelni")
-        } else {
-            this.#y = value;
-        }
+        return this;
     }
 
     toString() {
-        return `Pont{x = ${this.#x}, y = ${this.#y}}`;
+        return `Pont{x = ${this.x}, y = ${this.y}}`;
     }
-} 
 
-const pontok = [];
+    tavolsagAzOrigotol() {
+        const tavolsag = Math.hypot(this.x, this.y);
+        return tavolsag.toFixed(2);
+    }
 
-function hozzaAd() {
-    const input_x = document.getElementById('input_x');
-    const input_y = document.getElementById('input_y');
-    const x = parseInt(input_x.value);
-    const y = parseInt(input_y.value);
-    const pont = new Pont(x, y);
-    pontok.push(pont);
-
-    document.getElementById("origo").innerHTML = "A pont távolsága az origótól: " + pont.tavolsagAzOrigotol();
-    
-}
-
-document.getElementById("hozzaad").addEventListener("click", kiir);
-
-function kiir() {
-    window.alert("Hello")
+    static tavolsag(p1, p2){
+        var c;
+        if (p1.x > p2.x && p1.y > p2.y){
+            c = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+        }
+        else if (p1.x < p2.x && p1.y < p2.y){
+            c = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+        }
+        else if (p1.x < p2.x && p1.y > p2.y){
+            c = Math.hypot(p2.x - p1.x, p1.y - p2.y);
+        }
+        else if (p1.x > p2.x && p1.y < p2.y){
+            c = Math.hypot(p1.x - p2.x, p2.y - p1.y);
+        }
+        else if (p1.x == p2.x && p1.y > p2.y){
+            c = p1.y - p2.y;
+        }
+        else if (p1.x == p2.x && p2.y > p1.y){
+            c = p2.y - p1.y;
+        }
+        else if (p1.x > p2.x && p1.y == p2.y){
+            c = p1.x - p2.x;
+        }
+        else if (p1.x < p2.x && p1.y == p2.y){
+            c = p2.x - p1.x;
+        }
+        else if (p1.x == p2.x && p1.y == p2.y){
+            c = 0;
+        }
+        return c.toFixed(2);
+    }
 }
