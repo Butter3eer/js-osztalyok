@@ -5,9 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
 </head>
 <body>
-    <form id="etel_urlap">
+    <form action="get" id="etel_urlap">
         <div class="mb-3">
             <label for="nev">Étel neve:</label>
             <input type="text" id="nev">
@@ -41,40 +46,47 @@
             <label for="víz">Víz</label><br>
         </div>
 
-        <button type="button" id="hozzaad">Hozzáad</button>
+        <button type="button" id="hozzaad" onclick="Hozzaad()">Hozzáad</button>
+        <br><br>
 
-        <div>
-            <table class="table" id="eloetelek">
-                <thead>
+        <table class="table table-light">
+            <thead>
+                <tr>
                     <th>Előételek</th>
-                </thead>
-                <tbody id="eloetelekBody">
-                    <tr id="Erow"></tr>
-                </tbody>
-            </table>
-        </div>
+                    <th>Név</th>
+                    <th>Ár</th>
+                    <th>Összetevők</th>
+                </tr>
+            </thead>
+            <tbody id="eloetelekBody">
+            </tbody>
+        </table>
 
-        <div>
-            <table class="table" id="foetelek">
-                <thead>
+        <table class="table">
+            <thead>
+                <tr>
                     <th>Főételek</th>
-                </thead>
-                <tbody id="foetelekBody">
-                    <tr id="Frow"></tr>
-                </tbody>
-            </table>
-        </div>
+                    <th>Név</th>
+                    <th>Ár</th>
+                    <th>Összetevők</th>
+                </tr>
+            </thead>
+            <tbody id="foetelekBody">
+            </tbody>
+        </table>
 
-        <div>
-            <table class="table" id="desszertek">
-                <thead>
+        <table class="table">
+            <thead>
+                <tr>
                     <th>Desszertek</th>
-                </thead>
-                <tbody id="desszertekBody">
-                    <tr id="Drow"></tr>
-                </tbody>
-            </table>
-        </div>
+                    <th>Név</th>
+                    <th>Ár</th>
+                    <th>Összetevők</th>
+                </tr>
+            </thead>
+            <tbody id="desszertekBody">
+            </tbody>
+        </table>
     </form>
 
     <script>
@@ -96,57 +108,111 @@
                 return this;
             }
         }
+
         const etelek = [];
-        const eloetelek = [];
-        const foetelek = [];
-        const desszertek = [];
+        const eloetel = [];
+        const foetel = [];
+        const desszert = [];
 
-        
-
-        function hozzaAd() {
+        function Hozzaad() {
             const nev = document.getElementById("nev").value;
             const ar = parseInt(document.getElementById("ar").value);
-            etelek.push(new Etel(nev, ar))
-
-            const szelekt = document.getElementById('kategoria');
-            let kateg = szelekt.value;
-
+            let kateg = document.getElementById('kategoria').value;
             const dobozok = document.querySelectorAll('input[type="checkbox"]');
             let kijeloltek = [];
-        }
+            
+            document.getElementById('kategoria').addEventListener("change", (event) => {
+                kateg = event.target.value;
+            })
 
-        szelekt.addEventListener("change", (event) => {
-            kateg = event.target.value;
-        })
+            console.log(kateg);
 
-        if (Etel.setKategoria(kategoria) == "Előétel"){
-            eloetelek.push(new Etel(nev, ar))
-        }
-        else if (Etel.setKategoria(kategoria) == "Főétel"){
-            foetelek.push(new Etel(nev, ar))
-        }
-        else if (Etel.setKategoria(kategoria) == "Desszert"){
-            desszertek.push(new Etel(nev, ar))
-        }
+            dobozok.forEach((item) => {
+                if (item.checked) {
+                    kijeloltek.push(item.value);
+                }
+                else{
+                    kijeloltek = kijeloltek.filter((value) => value !== item.value)
+                }  
+            })
 
-        dobozok.forEach((item) => {
-            if (item.target.checked) {
-                kijeloltek.push(event.target.value);
+            Ujetel = new Etel(nev, ar);
+            etelek.push(Ujetel);
+
+            if (Object.is(kateg, "Előétel")) {
+                if (!eloetel.includes(Ujetel.nev) || !foetel.includes(Ujetel.nev) || !desszert.includes(Ujetel.nev)){
+                    eloetel.push(Ujetel);
+                    EaddRow(nev, ar, kijeloltek)
+                    Ujetel.kategoria = "Előétel";
+                }else {
+                    Ujetel.nev = nev;
+                    Ujetel.ar = ar;
+                    Ujetel.kategoria = "Előétel";
+                    Ujetel.osszetevok = kijeloltek;
+                }
             }
-            else{
-                kijeloltek = kijeloltek.filter((value) => value !== event.target.value)
+            else if (Object.is(kateg, "Főétel")) {
+                if (!eloetel.includes(Ujetel.nev) || !foetel.includes(Ujetel.nev) || !desszert.includes(Ujetel.nev)){
+                    foetel.push(Ujetel);
+                    FaddRow(nev, ar, kijeloltek)
+                    Ujetel.kategoria = "Főétel";
+                }else {
+                    Ujetel.nev = nev;
+                    Ujetel.ar = ar;
+                    Ujetel.kategoria = "Főétel";
+                    Ujetel.osszetevok = kijeloltek;
+                }
             }
-        })
+            else if (Object.is(kateg, "Desszert")) {
+                if (!eloetel.includes(Ujetel.nev) || !foetel.includes(Ujetel.nev) || !desszert.includes(Ujetel.nev)){
+                    desszert.push(Ujetel);
+                    DaddRow(nev, ar, kijeloltek)
+                    Ujetel.kategoria = "Desszert";
+                }else {
+                    Ujetel.nev = nev;
+                    Ujetel.ar = ar;
+                    Ujetel.kategoria = "Desszert";
+                    Ujetel.osszetevok = kijeloltek;
+                }
+            }
+            console.log(eloetel);
+        }
 
-        function addRow(nev, ar, osszetevok){
+
+        function EaddRow(nev, ar, osszetevok){
             let Ebody = document.getElementById("eloetelekBody")
-            let Erow = document.getElementById("Erow");
+            let Erow = document.createElement("tr");
             Erow.innerHTML = `
+                <td></td>
                 <td>${nev}</td>
                 <td>${ar}</td>
                 <td>${osszetevok}</td>`;
             
                 Ebody.appendChild(Erow);
+        }
+
+        function FaddRow(nev, ar, osszetevok){
+            let Fbody = document.getElementById("foetelekBody")
+            let Frow = document.createElement("tr");
+            Frow.innerHTML = `
+                <td></td>
+                <td>${nev}</td>
+                <td>${ar}</td>
+                <td>${osszetevok}</td>`;
+            
+                Fbody.appendChild(Frow);
+        }
+
+        function DaddRow(nev, ar, osszetevok){
+            let Dbody = document.getElementById("desszertekBody")
+            let Drow = document.createElement("tr");
+            Drow.innerHTML = `
+                <td></td>
+                <td>${nev}</td>
+                <td>${ar}</td>
+                <td>${osszetevok}</td>`;
+            
+                Dbody.appendChild(Drow);
         }
         
     </script>
