@@ -136,46 +136,52 @@
                 }  
             })
 
-            Ujetel = new Etel(nev, ar);
+            var Ujetel = new Etel(nev, ar);
+            var UjNev = Ujetel.nev;
             etelek.push(Ujetel);
 
             if (Object.is(kateg, "Előétel")) {
-                if (!eloetel.includes(Ujetel.nev) || !foetel.includes(Ujetel.nev) || !desszert.includes(Ujetel.nev)){
+                while (!eloetel.includes(Ujetel.nev) || !foetel.includes(UjNev) || !desszert.includes(UjNev)){
                     eloetel.push(Ujetel);
-                    EaddRow(nev, ar, kijeloltek)
+                    EaddRow(nev, ar, kijeloltek);
                     Ujetel.kategoria = "Előétel";
-                }else {
-                    Ujetel.nev = nev;
-                    Ujetel.ar = ar;
-                    Ujetel.kategoria = "Előétel";
-                    Ujetel.osszetevok = kijeloltek;
                 }
+                const body = doument.getElementById("eloetelekBody")
+                const row = body.getElementsByTagName("tr");
+
+                for (let index = 0; index < row.length; index++) {
+                    const etelnev = row[index].getElementsByTagName("td")[1].textContent;
+                    if (etelnev === Ujetel.nev) {
+                        body.deleteRow(index);
+                        index--;
+                    }
+                }
+                const index = eloetel.indexOf(etelek[-1]);
+                eloetel.splice(index, 1, Ujetel);
             }
             else if (Object.is(kateg, "Főétel")) {
-                if (!eloetel.includes(Ujetel.nev) || !foetel.includes(Ujetel.nev) || !desszert.includes(Ujetel.nev)){
+                if (!eloetel.includes(UjNev) || !foetel.includes(UjNev) || !desszert.includes(UjNev)){
                     foetel.push(Ujetel);
                     FaddRow(nev, ar, kijeloltek)
                     Ujetel.kategoria = "Főétel";
                 }else {
-                    Ujetel.nev = nev;
-                    Ujetel.ar = ar;
-                    Ujetel.kategoria = "Főétel";
-                    Ujetel.osszetevok = kijeloltek;
+                    const index = foetel.indexOf(etelek[-1]);
+                    foetel.splice(index, 1, Ujetel);
                 }
             }
             else if (Object.is(kateg, "Desszert")) {
-                if (!eloetel.includes(Ujetel.nev) || !foetel.includes(Ujetel.nev) || !desszert.includes(Ujetel.nev)){
+                if (!eloetel.includes(UjNev) || !foetel.includes(UjNev) || !desszert.includes(UjNev)){
                     desszert.push(Ujetel);
                     DaddRow(nev, ar, kijeloltek)
                     Ujetel.kategoria = "Desszert";
                 }else {
-                    Ujetel.nev = nev;
-                    Ujetel.ar = ar;
-                    Ujetel.kategoria = "Desszert";
-                    Ujetel.osszetevok = kijeloltek;
+                    const index = desszert.indexOf(etelek[-1]);
+                    desszert.splice(index, 1, Ujetel);
                 }
             }
             console.log(eloetel);
+            console.log(foetel);
+            console.log(desszert);
         }
 
 
